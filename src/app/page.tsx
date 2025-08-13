@@ -125,9 +125,48 @@ function PaymentForm({ jwt, apiKey }: { jwt: string; apiKey: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '30%', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-      <CardElement id="my-card" ref={cardRef} />
-      <button type="submit" style={{ width: '100%', padding: '5px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Pay Now</button>
-    </form>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      minHeight: '100vh',
+      padding: '20px'
+    }}>
+      <form onSubmit={handleSubmit} style={{ 
+        width: '400px', 
+        padding: '30px', 
+        border: '1px solid #e0e0e0', 
+        borderRadius: '12px', 
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+        backgroundColor: '#ffffff'
+      }}>
+        <div style={{ marginBottom: '20px' }}>
+          <CardElement id="my-card" ref={cardRef} />
+        </div>
+        <button 
+          type="submit" 
+          style={{ 
+            width: '100%', 
+            padding: '12px', 
+            backgroundColor: '#00C768', 
+            color: '#fff', 
+            border: 'none', 
+            borderRadius: '8px', 
+            cursor: 'pointer',
+            fontSize: '16px',
+            marginBottom: '16px'
+          }}
+        >
+          Register Card
+        </button>
+        <div style={{ 
+          textAlign: 'center', 
+          fontSize: '14px', 
+          color: '#666666',
+        }}>
+          Powered by Crossmint
+        </div>
+      </form>
+    </div>
   );
 }
