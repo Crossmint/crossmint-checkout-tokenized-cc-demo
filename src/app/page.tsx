@@ -12,7 +12,7 @@ import {
   BasisTheoryProvider,
 } from "@basis-theory/react-elements";
 
-const CROSSMINT_BASE_URL = "https://staging.crossmint.com";
+const CROSSMINT_BASE_URL = "https://main.icyforest-9fbfd6c0.eastus2.azurecontainerapps.io/";
 const CROSSMINT_API_KEY = "";
 
 function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
@@ -125,9 +125,9 @@ function PaymentForm({ jwt, apiKey }: { jwt: string; apiKey: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ width: '30%', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
       <CardElement id="my-card" ref={cardRef} />
-      <button type="submit">Pay Now</button>
+      <button type="submit" style={{ width: '100%', padding: '5px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Pay Now</button>
     </form>
   );
 }
