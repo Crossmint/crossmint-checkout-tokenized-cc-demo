@@ -9,19 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.4.3"
+    "@basis-theory-ai/react": "^1.0.1-beta.4",
+    "@basis-theory/basis-theory-js": "^4.30.0",
+    "@basis-theory/basis-theory-react": "^1.32.5",
+    "@basis-theory/react-elements": "^1.23.1",
+    "@basis-theory/web-elements": "^1.23.1",
+    "next": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
