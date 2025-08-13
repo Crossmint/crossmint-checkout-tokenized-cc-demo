@@ -12,8 +12,8 @@ This is a Next.js application that demonstrates tokenized credit card processing
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Crossmint/tokenized-cc-demo
-   cd tokenized-cc-demo
+   git clone https://github.com/Crossmint/crossmint-checkout-tokenized-cc-demo
+   cd crossmint-checkout-tokenized-cc-demo
    ```
 
 2. **Install dependencies**
