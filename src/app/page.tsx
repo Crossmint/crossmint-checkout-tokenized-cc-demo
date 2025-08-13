@@ -140,6 +140,19 @@ function PaymentForm({ jwt, apiKey }: { jwt: string; apiKey: string }) {
         boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
         backgroundColor: '#ffffff'
       }}>
+        <div style={{ 
+          marginBottom: '24px',
+          textAlign: 'left'
+        }}>
+          <h2 style={{ 
+            fontSize: '24px', 
+            fontWeight: '600', 
+            color: '#333333',
+            margin: '0 0 8px 0'
+          }}>
+            Payment Information
+          </h2>
+        </div>
         <div style={{ marginBottom: '20px' }}>
           <CardElement id="my-card" ref={cardRef} />
         </div>
@@ -157,7 +170,7 @@ function PaymentForm({ jwt, apiKey }: { jwt: string; apiKey: string }) {
             marginBottom: '16px'
           }}
         >
-          Register Card
+          Register
         </button>
         <div style={{ 
           textAlign: 'center', 
