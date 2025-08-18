@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { CROSSMINT_BASE_URL } from "@/lib/crossmint";
+import { CROSSMINT_BASE_URL } from "@/app/consts";
 import {
   // @ts-ignore
   useBasisTheory as useBasisTheoryAI,

@@ -7,7 +7,7 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/lib/crossmint";
+import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/app/consts";
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
