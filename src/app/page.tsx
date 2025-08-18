@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import {
   // @ts-ignore
   useBasisTheory as useBasisTheoryAI,
@@ -19,7 +20,7 @@ import {
 
 const CROSSMINT_BASE_URL =
   "https://main.icyforest-9fbfd6c0.eastus2.azurecontainerapps.io/";
-const CROSSMINT_API_KEY = "";
+const CROSSMINT_API_KEY = "sk_test.ad1f46fe.67853d066b359d071d5cab5ef03382f6";
 
 function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
   const { bt } = useBasisTheory(apiKey);
@@ -72,6 +73,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
   const [cardholderName, setCardholderName] = useState("");
   const { verifyPurchaseIntent } = useBasisTheoryAI();
   const { bt } = useBasisTheory();
+  const router = useRouter();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -153,6 +155,14 @@ function PaymentForm({ jwt }: { jwt: string }) {
     );
 
     console.log({ paymentIntent });
+
+    try {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("paymentIntent", paymentIntent);
+      }
+    } catch (_err) {}
+
+    router.push(`/order?paymentIntent=${encodeURIComponent(paymentIntent)}`);
   };
 
   return (
