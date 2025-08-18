@@ -37,6 +37,18 @@ This application demonstrates a complete tokenized credit card payment flow:
 2. **Payment Method Creation**: Creates a payment method from the tokenized card
 3. **Purchase Intent**: Initiates a purchase intent through Crossmint
 4. **Verification**: Verifies the purchase intent and returns a payment intent ID
+### New Order Flow (after card registration)
+
+1. After the card is registered on the home page, the app redirects to `/order` with a `paymentIntent`.
+2. On `/order`, the user enters:
+   - URL of product to purchase
+   - Optional note
+   - Email
+3. On submit, the app:
+   - Calls `POST /api/2022-06-09/orders` with `lineItems.productLocator = url:<url>:<note>` and collects `response.order.orderId`.
+   - Calls `POST /api/unstable/orders/{orderId}/payment` with body `{ token: "vic:<paymentIntent>" }`.
+4. The result of the payment call is displayed on the page.
+
 
 Note this implementation is in staging. When the production version is available OTP flows and passkey generation/verification steps will be part of the user's card registration and payment flow.
 
