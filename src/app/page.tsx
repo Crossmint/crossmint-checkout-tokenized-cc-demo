@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { CROSSMINT_BASE_URL } from "@/lib/crossmint";
 import {
   // @ts-ignore
   useBasisTheory as useBasisTheoryAI,
@@ -17,10 +18,6 @@ import {
   type ICardExpirationDateElement,
   type ICardVerificationCodeElement,
 } from "@basis-theory/react-elements";
-
-const CROSSMINT_BASE_URL =
-  "https://main.icyforest-9fbfd6c0.eastus2.azurecontainerapps.io/";
-const CROSSMINT_API_KEY = "sk_test.ad1f46fe.67853d066b359d071d5cab5ef03382f6";
 
 function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
   const { bt } = useBasisTheory(apiKey);

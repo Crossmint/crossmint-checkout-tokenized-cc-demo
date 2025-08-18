@@ -7,10 +7,7 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-
-const CROSSMINT_BASE_URL =
-  "https://main.icyforest-9fbfd6c0.eastus2.azurecontainerapps.io/";
-const CROSSMINT_API_KEY = "sk_test.ad1f46fe.67853d066b359d071d5cab5ef03382f6";
+import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/lib/crossmint";
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
