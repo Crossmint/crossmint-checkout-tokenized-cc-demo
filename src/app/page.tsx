@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { CROSSMINT_BASE_URL } from "@/app/consts";
+import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/app/consts";
 import {
   // @ts-ignore
   useBasisTheory as useBasisTheoryAI,
@@ -38,7 +38,12 @@ export default function CheckoutPage() {
     async function fetchApiKey() {
       try {
         const res = await fetch(
-          `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard`
+          `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard`,
+          {
+            headers: {
+              "x-api-key": CROSSMINT_API_KEY, // Requires an api key at the moment
+            },
+          }
         );
         const data = await res.json();
         setJwt(data.jwt);
