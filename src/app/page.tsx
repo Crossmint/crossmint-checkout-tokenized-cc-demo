@@ -108,7 +108,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
     console.log({ token });
 
     const createPaymentMethodRequestBody = {
-      entityId: "crossmint-preview",
+      entityId: "crossmint-staging",
       tokenId: token.id,
     };
 
