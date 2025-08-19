@@ -109,7 +109,6 @@ export default function OrderPage() {
           const text = await paymentRes.text();
           throw new Error(`Payment failed: ${paymentRes.status} ${text}`);
         }
-        const paymentJson = await paymentRes.json();
         setResult(`Your order has been sent. orderId: ${orderId}`);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : String(err));
@@ -219,6 +218,7 @@ export default function OrderPage() {
               overflow: "auto",
               background: "#f7f7f7",
               padding: 12,
+              color: "#00C768",
               borderRadius: 8,
             }}
           >
