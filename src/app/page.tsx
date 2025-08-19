@@ -156,15 +156,17 @@ function PaymentForm({ jwt }: { jwt: string }) {
       purchaseIntent.purchaseIntentId
     );
 
-    console.log({ paymentIntent });
+    console.log("paymentIntent", paymentIntent);
+    const paymentIntentId = paymentIntent.id;
+    console.log("paymentIntent.id", paymentIntentId);
 
     try {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("paymentIntent", paymentIntent);
+        sessionStorage.setItem("paymentIntent", paymentIntentId);
       }
     } catch (_err) {}
 
-    router.push(`/order?paymentIntent=${encodeURIComponent(paymentIntent)}`);
+    router.push(`/order?paymentIntent=${encodeURIComponent(paymentIntentId)}`);
   };
 
   return (

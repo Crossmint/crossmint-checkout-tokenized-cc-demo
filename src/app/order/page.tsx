@@ -110,7 +110,7 @@ export default function OrderPage() {
           throw new Error(`Payment failed: ${paymentRes.status} ${text}`);
         }
         const paymentJson = await paymentRes.json();
-        setResult(JSON.stringify({ orderId, payment: paymentJson }, null, 2));
+        setResult(`Your order has been sent. orderId: ${orderId}`);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : String(err));
       } finally {
