@@ -26,8 +26,19 @@ This is a Next.js application that demonstrates tokenized credit card processing
    npm run dev
    ```
 
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000) (or the port shown in your terminal)
+4. **Set up HTTPS for local development (Required)**
+   Due to security reasons, the card verification process cannot happen in an HTTP environment. Use ngrok to create an HTTPS tunnel:
+   ```bash
+   ngrok http 3000 (or the port shown in your terminal)
+   ```
+
+5. **Open your browser**
+   Navigate to the HTTPS URL provided by ngrok (e.g., `https://abc123.ngrok.io`) instead of the local HTTP URL
+
+## ⚠️ Important Notes
+
+### Test Card Information
+Please use this Mastercard test card: **5120350110725465** (any CVC and expiration date)
 
 ## 🎯 What This Demo Does
 
