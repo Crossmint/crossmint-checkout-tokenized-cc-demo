@@ -41,7 +41,7 @@ export default function CheckoutPage() {
           `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard`,
           {
             headers: {
-              "x-api-key": CROSSMINT_API_KEY, // Requires an api key at the moment
+              "x-api-key": CROSSMINT_API_KEY,
             },
           }
         );
