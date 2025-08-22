@@ -1,7 +1,12 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/app/consts";
+import {
+  CROSSMINT_BASE_URL,
+  CROSSMINT_CLIENT_API_KEY,
+  JWT_SUBJECT,
+  TOKEN_TYPE,
+} from "@/app/consts";
 import {
   // @ts-ignore
   useBasisTheory as useBasisTheoryAI,
@@ -18,6 +23,7 @@ import {
   type ICardExpirationDateElement,
   type ICardVerificationCodeElement,
 } from "@basis-theory/react-elements";
+import { PaymentMethod } from "@/lib/types";
 
 function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
   const { bt } = useBasisTheory(apiKey);
@@ -41,7 +47,7 @@ export default function CheckoutPage() {
           `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard`,
           {
             headers: {
-              "x-api-key": CROSSMINT_API_KEY,
+              "x-api-key": CROSSMINT_CLIENT_API_KEY,
             },
           }
         );
@@ -110,10 +116,45 @@ function PaymentForm({ jwt }: { jwt: string }) {
       },
     });
 
+    if (TOKEN_TYPE === "basic") {
+      await fetch(
+        `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard/registerToken`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CROSSMINT_CLIENT_API_KEY,
+          },
+          body: JSON.stringify({
+            token: token.id,
+          }),
+        }
+      );
+      const appPaymentMethod: PaymentMethod = {
+        type: "basic",
+        tokenId: token.id,
+      };
+      try {
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(
+            "paymentMethod",
+            JSON.stringify(appPaymentMethod)
+          );
+        }
+      } catch (_err) {}
+
+      router.push(
+        `/order?paymentMethod=${encodeURIComponent(
+          JSON.stringify(appPaymentMethod)
+        )}`
+      );
+      return;
+    }
+
     console.log({ token });
 
     const createPaymentMethodRequestBody = {
-      entityId: "crossmint-staging",
+      entityId: JWT_SUBJECT,
       tokenId: token.id,
     };
 
@@ -141,7 +182,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": CROSSMINT_API_KEY,
+          "x-api-key": CROSSMINT_CLIENT_API_KEY,
         },
         body: JSON.stringify(paymentIntentData),
       }
@@ -160,13 +201,25 @@ function PaymentForm({ jwt }: { jwt: string }) {
     const paymentIntentId = paymentIntent.id;
     console.log("paymentIntent.id", paymentIntentId);
 
+    const appPaymentMethod: PaymentMethod = {
+      type: "agentic",
+      paymentMethodId: paymentMethod.id,
+    };
+
     try {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("paymentIntent", paymentIntentId);
+        sessionStorage.setItem(
+          "paymentMethod",
+          JSON.stringify(appPaymentMethod)
+        );
       }
     } catch (_err) {}
 
-    router.push(`/order?paymentIntent=${encodeURIComponent(paymentIntentId)}`);
+    router.push(
+      `/order?paymentMethod=${encodeURIComponent(
+        JSON.stringify(appPaymentMethod)
+      )}`
+    );
   };
 
   return (

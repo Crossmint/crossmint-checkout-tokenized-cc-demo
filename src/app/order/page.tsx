@@ -7,7 +7,8 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import { CROSSMINT_BASE_URL, CROSSMINT_API_KEY } from "@/app/consts";
+import { CROSSMINT_BASE_URL, CROSSMINT_CLIENT_API_KEY, CROSSMINT_SERVER_API_KEY } from "@/app/consts";
+import { PaymentMethod } from "@/lib/types";
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
@@ -18,26 +19,26 @@ export default function OrderPage() {
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const paymentIntentFromQuery = searchParams.get("paymentIntent") || "";
+  const paymentMethodFromQuery = searchParams.get("paymentMethod") || "";
 
-  const paymentIntent = useMemo(() => {
-    if (paymentIntentFromQuery) return paymentIntentFromQuery;
+  const paymentMethod = useMemo(() => {
+    if (paymentMethodFromQuery) return JSON.parse(paymentMethodFromQuery) as PaymentMethod;
     if (typeof window !== "undefined") {
       try {
-        const stored = sessionStorage.getItem("paymentIntent");
-        if (stored) return stored;
+        const stored = sessionStorage.getItem("paymentMethod");
+        if (stored) return JSON.parse(stored) as PaymentMethod;
       } catch {}
     }
-    return "";
-  }, [paymentIntentFromQuery]);
+    return undefined;
+  }, [paymentMethodFromQuery]);
 
   useEffect(() => {
-    if (!paymentIntent) {
+    if (!paymentMethod) {
       setError(
-        "Missing paymentIntent; please go back and register a card first."
+        "Missing paymentMethod; please go back and register a card first."
       );
     }
-  }, [paymentIntent]);
+  }, [paymentMethod]);
 
   const onSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
@@ -45,6 +46,12 @@ export default function OrderPage() {
       setSubmitting(true);
       setError(null);
       setResult(null);
+
+      if (!paymentMethod) {
+        setError("Missing paymentMethod; please go back and register a card first.");
+        return;
+      }
+
       try {
         const productLocator = `url:${productUrl}:${note || ""}`;
 
@@ -77,7 +84,7 @@ export default function OrderPage() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-client-secret": CROSSMINT_API_KEY,
+              "x-client-secret": CROSSMINT_CLIENT_API_KEY,
             },
             body: JSON.stringify(createOrderBody),
           }
@@ -100,9 +107,9 @@ export default function OrderPage() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-client-secret": CROSSMINT_API_KEY,
+              "x-client-secret": CROSSMINT_SERVER_API_KEY,
             },
-            body: JSON.stringify({ token: `vic:${paymentIntent}` }),
+            body: JSON.stringify(getPaymentRequestBodyFromPaymentMethod(paymentMethod)),
           }
         );
         if (!paymentRes.ok) {
@@ -116,7 +123,7 @@ export default function OrderPage() {
         setSubmitting(false);
       }
     },
-    [productUrl, note, email, paymentIntent]
+    [productUrl, note, email, paymentMethod]
   );
 
   return (
@@ -188,7 +195,7 @@ export default function OrderPage() {
         </div>
         <button
           type="submit"
-          disabled={submitting || !paymentIntent}
+          disabled={submitting || !paymentMethod}
           style={{
             width: "100%",
             padding: "12px",
@@ -225,12 +232,19 @@ export default function OrderPage() {
             {result}
           </pre>
         )}
-        {!paymentIntent && (
+        {!paymentMethod && (
           <div style={{ color: "#b00020", marginTop: 8, fontSize: 14 }}>
-            Payment intent missing. Make sure to register a card first.
+            Payment method missing. Make sure to register a card first.
           </div>
         )}
       </form>
     </div>
   );
+}
+
+function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): { token: string } {
+  if (paymentMethod.type === "basic") {
+    return { token: paymentMethod.tokenId };
+  }
+  return { token: `vic:${paymentMethod.paymentMethodId}` };
 }
