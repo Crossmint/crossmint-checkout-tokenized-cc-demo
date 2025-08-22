@@ -37,6 +37,12 @@ This is a Next.js application that demonstrates tokenized credit card processing
 
 ## ⚠️ Important Notes
 
+### Non-agentic Flow
+
+In cases of unreliability with the Visa/Mastercard Agentic commerce APIs (e.g. payment intent creation) use the non-agentic flow by setting the value of `TOKEN_TYPE` in `src/consts.ts` to `"basic"`
+
+This will create a credit card token that can be passed to the checkout (orders) endpoint identically to an agentic token.
+
 ### Test Card Information
 Please use this Mastercard test card: **5120350110725465** (any CVC and expiration date)
 
