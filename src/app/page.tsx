@@ -126,7 +126,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
             "x-api-key": CROSSMINT_CLIENT_API_KEY,
           },
           body: JSON.stringify({
-            token: token.id,
+            tokenId: token.id,
           }),
         }
       );
@@ -159,7 +159,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
     };
 
     const response = await fetch(
-      `https://api.sandbox.basistheory.ai/projects/6f1ab300-8dca-4ac4-8766-ad7e7a735b0b/payment-methods`,
+      "https://api.sandbox.basistheory.ai/projects/6f1ab300-8dca-4ac4-8766-ad7e7a735b0b/payment-methods",
       {
         method: "POST",
         headers: {
@@ -174,6 +174,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
 
     const paymentIntentData = {
       paymentMethodId: paymentMethod.id,
+      cardHolderName: cardholderName,
     };
 
     const response2 = await fetch(
