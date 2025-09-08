@@ -25,11 +25,19 @@ import {
 } from "@basis-theory/react-elements";
 import { PaymentMethod } from "@/lib/types";
 
-function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
+function CheckoutWithBT({
+  jwt,
+  apiKey,
+  basisTheoryProjectId,
+}: {
+  jwt: string;
+  apiKey: string;
+  basisTheoryProjectId: string;
+}) {
   const { bt } = useBasisTheory(apiKey);
   return (
     <BasisTheoryProvider bt={bt}>
-      <PaymentForm jwt={jwt} />
+      <PaymentForm jwt={jwt} basisTheoryProjectId={basisTheoryProjectId} />
     </BasisTheoryProvider>
   );
 }
@@ -37,6 +45,7 @@ function CheckoutWithBT({ jwt, apiKey }: { jwt: string; apiKey: string }) {
 export default function CheckoutPage() {
   const [jwt, setJwt] = useState(null);
   const [apiKey, setApiKey] = useState(null);
+  const [basisTheoryProjectId, setBasisTheoryProjectId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch API key on mount
@@ -54,6 +63,7 @@ export default function CheckoutPage() {
         const data = await res.json();
         setJwt(data.jwt);
         setApiKey(data.basisTheoryAPIKey);
+        setBasisTheoryProjectId(data.basisTheoryProjectId);
       } catch (error) {
         console.error("Failed to fetch API key:", error);
       } finally {
@@ -63,18 +73,28 @@ export default function CheckoutPage() {
     fetchApiKey();
   }, []);
 
-  if (loading || !jwt || !apiKey) {
+  if (loading || !jwt || !apiKey || !basisTheoryProjectId) {
     return <div>Loading Basis Theory...</div>;
   }
 
   return (
     <BasisTheoryAIProvider apiKey={jwt}>
-      <CheckoutWithBT jwt={jwt} apiKey={apiKey} />
+      <CheckoutWithBT
+        jwt={jwt}
+        apiKey={apiKey}
+        basisTheoryProjectId={basisTheoryProjectId}
+      />
     </BasisTheoryAIProvider>
   );
 }
 
-function PaymentForm({ jwt }: { jwt: string }) {
+function PaymentForm({
+  jwt,
+  basisTheoryProjectId,
+}: {
+  jwt: string;
+  basisTheoryProjectId: string;
+}) {
   const cardNumberRef = useRef<ICardNumberElement | null>(null);
   const cardExpirationRef = useRef<ICardExpirationDateElement | null>(null);
   const cardCvcRef = useRef<ICardVerificationCodeElement | null>(null);
@@ -126,7 +146,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
             "x-api-key": CROSSMINT_CLIENT_API_KEY,
           },
           body: JSON.stringify({
-            tokenId: token.id,
+            token: token.id,
           }),
         }
       );
@@ -159,7 +179,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
     };
 
     const response = await fetch(
-      "https://api.sandbox.basistheory.ai/projects/6f1ab300-8dca-4ac4-8766-ad7e7a735b0b/payment-methods",
+      `https://api.sandbox.basistheory.ai/projects/${basisTheoryProjectId}/payment-methods`,
       {
         method: "POST",
         headers: {
@@ -194,7 +214,7 @@ function PaymentForm({ jwt }: { jwt: string }) {
     console.log("purchaseIntent", purchaseIntent);
 
     const paymentIntent = await verifyPurchaseIntent(
-      "6f1ab300-8dca-4ac4-8766-ad7e7a735b0b",
+      basisTheoryProjectId,
       purchaseIntent.purchaseIntentId
     );
 
