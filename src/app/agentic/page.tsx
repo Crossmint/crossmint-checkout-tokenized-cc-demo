@@ -2,9 +2,15 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CROSSMINT_BASE_URL, CROSSMINT_CLIENT_API_KEY } from "@/app/consts";
 import {
-  // @ts-expect-error -- No types available
+  CROSSMINT_BASE_URL,
+  CROSSMINT_CLIENT_API_KEY,
+  JWT_SUBJECT,
+} from "@/app/consts";
+import {
+  // @ts-ignore
+  useBasisTheory as useBasisTheoryAI,
+  // @ts-ignore
   BasisTheoryProvider as BasisTheoryAIProvider,
 } from "@basis-theory-ai/react";
 import {
@@ -20,7 +26,9 @@ import {
 import { PaymentMethod } from "@/lib/types";
 
 function CheckoutWithBT({
+  jwt,
   apiKey,
+  basisTheoryProjectId,
 }: {
   jwt: string;
   apiKey: string;
@@ -29,12 +37,12 @@ function CheckoutWithBT({
   const { bt } = useBasisTheory(apiKey);
   return (
     <BasisTheoryProvider bt={bt}>
-      <PaymentForm />
+      <PaymentForm jwt={jwt} basisTheoryProjectId={basisTheoryProjectId} />
     </BasisTheoryProvider>
   );
 }
 
-export default function BasicCheckoutPage() {
+export default function AgenticCheckoutPage() {
   const [jwt, setJwt] = useState(null);
   const [apiKey, setApiKey] = useState(null);
   const [basisTheoryProjectId, setBasisTheoryProjectId] = useState(null);
@@ -80,11 +88,18 @@ export default function BasicCheckoutPage() {
   );
 }
 
-function PaymentForm() {
+function PaymentForm({
+  jwt,
+  basisTheoryProjectId,
+}: {
+  jwt: string;
+  basisTheoryProjectId: string;
+}) {
   const cardNumberRef = useRef<ICardNumberElement | null>(null);
   const cardExpirationRef = useRef<ICardExpirationDateElement | null>(null);
   const cardCvcRef = useRef<ICardVerificationCodeElement | null>(null);
   const [cardholderName, setCardholderName] = useState("");
+  const { verifyPurchaseIntent } = useBasisTheoryAI();
   const { bt } = useBasisTheory();
   const router = useRouter();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -121,23 +136,62 @@ function PaymentForm() {
       },
     });
 
-    await fetch(
-      `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard/registerToken`,
+    console.log({ token });
+
+    const createPaymentMethodRequestBody = {
+      entityId: JWT_SUBJECT,
+      tokenId: token.id,
+    };
+
+    const response = await fetch(
+      `https://api.sandbox.basistheory.ai/projects/${basisTheoryProjectId}/payment-methods`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(createPaymentMethodRequestBody),
+      }
+    );
+    const paymentMethod = await response.json();
+    console.log("paymentMethod", paymentMethod);
+
+    const paymentIntentData = {
+      paymentMethodId: paymentMethod.id,
+      cardHolderName: cardholderName,
+    };
+
+    const response2 = await fetch(
+      `${CROSSMINT_BASE_URL}/api/unstable/setupTokenizeCard/createPurchaseIntent`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": CROSSMINT_CLIENT_API_KEY,
         },
-        body: JSON.stringify({
-          token: token.id,
-        }),
+        body: JSON.stringify(paymentIntentData),
       }
     );
+
+    const purchaseIntent = await response2.json();
+
+    console.log("purchaseIntent", purchaseIntent);
+
+    const paymentIntent = await verifyPurchaseIntent(
+      basisTheoryProjectId,
+      purchaseIntent.purchaseIntentId
+    );
+
+    console.log("paymentIntent", paymentIntent);
+    const paymentIntentId = paymentIntent.id;
+    console.log("paymentIntent.id", paymentIntentId);
+
     const appPaymentMethod: PaymentMethod = {
-      type: "basic",
-      tokenId: token.id,
+      type: "agentic",
+      paymentMethodId: paymentMethod.id,
     };
+
     try {
       if (typeof window !== "undefined") {
         sessionStorage.setItem(
@@ -145,7 +199,7 @@ function PaymentForm() {
           JSON.stringify(appPaymentMethod)
         );
       }
-    } catch {}
+    } catch (_err) {}
 
     router.push(
       `/order?paymentMethod=${encodeURIComponent(
@@ -189,7 +243,7 @@ function PaymentForm() {
               margin: "0 0 8px 0",
             }}
           >
-            Basic Flow
+            Agentic Flow
           </h2>
         </div>
         <div style={{ display: "grid", gap: 12, marginBottom: "20px" }}>
@@ -237,7 +291,7 @@ function PaymentForm() {
           Register
         </button>
         <Link
-          href="/agentic"
+          href="/"
           style={{
             display: "block",
             width: "100%",
@@ -253,7 +307,7 @@ function PaymentForm() {
             textDecoration: "none",
           }}
         >
-          Switch to Agentic Flow
+          Switch to Basic Flow
         </Link>
         <div
           style={{
