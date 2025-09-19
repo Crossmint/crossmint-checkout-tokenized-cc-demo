@@ -184,10 +184,14 @@ function PaymentForm({
     console.log("paymentIntent", paymentIntent);
     const paymentIntentId = paymentIntent.id;
     console.log("paymentIntent.id", paymentIntentId);
+    console.log(
+      "purchaseIntent.purchaseIntentId",
+      purchaseIntent.purchaseIntentId
+    );
 
     const appPaymentMethod: PaymentMethod = {
       type: "agentic",
-      paymentMethodId: paymentMethod.id,
+      purchaseIntentId: purchaseIntent.purchaseIntentId,
     };
 
     try {

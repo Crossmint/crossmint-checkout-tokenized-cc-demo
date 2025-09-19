@@ -44,7 +44,7 @@ In cases of unreliability with the Visa/Mastercard Agentic commerce APIs (e.g. p
 This will create a credit card token that can be passed to the checkout (orders) endpoint identically to an agentic token.
 
 ### Test Card Information
-Please use this Mastercard test card: **5120350110725465** (any CVC and expiration date)
+Please use this Mastercard test card: **5186161910000103** (any CVC and expiration date)
 
 ## 🎯 What This Demo Does
 
