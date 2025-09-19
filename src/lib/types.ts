@@ -5,5 +5,5 @@ export type PaymentMethod =
     }
   | {
       type: "agentic";
-      paymentMethodId: string;
+      purchaseIntentId: string;
     };

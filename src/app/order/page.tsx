@@ -7,7 +7,11 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import { CROSSMINT_BASE_URL, CROSSMINT_CLIENT_API_KEY, CROSSMINT_SERVER_API_KEY } from "@/app/consts";
+import {
+  CROSSMINT_BASE_URL,
+  CROSSMINT_CLIENT_API_KEY,
+  CROSSMINT_SERVER_API_KEY,
+} from "@/app/consts";
 import { PaymentMethod } from "@/lib/types";
 
 export default function OrderPage() {
@@ -22,7 +26,8 @@ export default function OrderPage() {
   const paymentMethodFromQuery = searchParams.get("paymentMethod") || "";
 
   const paymentMethod = useMemo(() => {
-    if (paymentMethodFromQuery) return JSON.parse(paymentMethodFromQuery) as PaymentMethod;
+    if (paymentMethodFromQuery)
+      return JSON.parse(paymentMethodFromQuery) as PaymentMethod;
     if (typeof window !== "undefined") {
       try {
         const stored = sessionStorage.getItem("paymentMethod");
@@ -48,7 +53,9 @@ export default function OrderPage() {
       setResult(null);
 
       if (!paymentMethod) {
-        setError("Missing paymentMethod; please go back and register a card first.");
+        setError(
+          "Missing paymentMethod; please go back and register a card first."
+        );
         return;
       }
 
@@ -109,7 +116,9 @@ export default function OrderPage() {
               "Content-Type": "application/json",
               "x-client-secret": CROSSMINT_SERVER_API_KEY,
             },
-            body: JSON.stringify(getPaymentRequestBodyFromPaymentMethod(paymentMethod)),
+            body: JSON.stringify(
+              getPaymentRequestBodyFromPaymentMethod(paymentMethod)
+            ),
           }
         );
         if (!paymentRes.ok) {
@@ -242,9 +251,11 @@ export default function OrderPage() {
   );
 }
 
-function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): { token: string } {
+function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): {
+  token: string;
+} {
   if (paymentMethod.type === "basic") {
     return { token: paymentMethod.tokenId };
   }
-  return { token: `vic:${paymentMethod.paymentMethodId}` };
+  return { token: `vic:${paymentMethod.purchaseIntentId}` };
 }

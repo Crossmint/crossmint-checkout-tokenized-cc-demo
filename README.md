@@ -1,6 +1,6 @@
 # Tokenized Credit Card Demo
 
-This is a Next.js application that demonstrates tokenized credit card processing using Basis Theory and Crossmint APIs. The app shows how to securely tokenize credit card information and process agentic payments without handling sensitive card data directly.
+This is a Next.js application that demonstrates tokenized credit card processing using Basis Theory and Crossmint APIs. The app shows how to securely tokenize credit card information and process payments without handling sensitive card data directly. It includes two separate flows: a "basic" flow and an "agentic" flow, each on its own page.
 
 ## 🚀 Quick Start
 
@@ -21,42 +21,52 @@ This is a Next.js application that demonstrates tokenized credit card processing
    npm install
    ```
 
-3. **Start the development server**
+3. **Configure API Keys**
+   Open `src/app/consts.ts` and add your Crossmint Client API Key.
+
+4. **Start the development server**
    ```bash
    npm run dev
    ```
 
-4. **Set up HTTPS for local development (Required)**
+5. **Set up HTTPS for local development (Required)**
    Due to security reasons, the card verification process cannot happen in an HTTP environment. Use ngrok to create an HTTPS tunnel:
    ```bash
    ngrok http 3000 (or the port shown in your terminal)
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to the HTTPS URL provided by ngrok (e.g., `https://abc123.ngrok.io`) instead of the local HTTP URL
 
-## ⚠️ Important Notes
+##  Flows
 
-### Non-agentic Flow
+This demo includes two separate flows, for more info about the flows, please refer to the [Crossmint Documentation](https://docs.crossmint.com/solutions/ai-agents/agentic-commerce/payment-methods):
 
-In cases of unreliability with the Visa/Mastercard Agentic commerce APIs (e.g. payment intent creation) use the non-agentic flow by setting the value of `TOKEN_TYPE` in `src/consts.ts` to `"basic"`
+-   **Basic Flow**: Accessible at the root path (`/`). This flow tokenizes a credit card and registers the token with Crossmint, works for every card.
+-   **Agentic Flow**: Accessible at `/agentic`. This flow tokenizes a card and creates a scoped purchase intent, which is more suitable for agentic commerce operations, works only for Visa or Mastercard.
 
-This will create a credit card token that can be passed to the checkout (orders) endpoint identically to an agentic token.
+You can switch between the flows using the buttons provided on each page.
+
+### Agentic Flow Notes
+
+-   **Visa cards are not yet supported** in the agentic flow.
+-   **Mastercard verification** may pop up twice, and you might need to click "Try Again" multiple times. This is a known issue that will be fixed soon.
 
 ### Test Card Information
-Please use this Mastercard test card: **5120350110725465** (any CVC and expiration date)
+Please use this Mastercard test card: **5186161910000103** (any CVC and expiration date)
 
 ## 🎯 What This Demo Does
 
 This application demonstrates a complete tokenized credit card payment flow:
 
 1. **Card Tokenization**: Securely tokenizes credit card information using Basis Theory
-2. **Payment Method Creation**: Creates a payment method from the tokenized card
-3. **Purchase Intent**: Initiates a purchase intent through Crossmint
-4. **Verification**: Verifies the purchase intent and returns a payment intent ID
+2. **Payment Method Creation (Agentic Flow)**: Creates a payment method from the tokenized card.
+3. **Purchase Intent (Agentic Flow)**: Initiates a purchase intent through Crossmint.
+4. **Token Registration (Basic Flow)**: Registers the card token with Crossmint.
+5. **Verification (Agentic Flow)**: Verifies the purchase intent and returns a payment intent ID.
 ### New Order Flow (after card registration)
 
-1. After the card is registered on the home page, the app redirects to `/order` with a `paymentIntent`.
+1. After the card is registered on the home page (`/` or `/agentic`), the app redirects to `/order`.
 2. On `/order`, the user enters:
    - URL of product to purchase
    - Optional note
@@ -146,16 +156,24 @@ When you successfully complete the payment flow, you should see the following co
 ## 🔧 How It Works
 
 ### Key Components
-- `CheckoutPage`: Main component that fetches API credentials
+- `BasicCheckoutPage` (`/`): Main component for the basic flow.
+- `AgenticCheckoutPage` (`/agentic`): Main component for the agentic flow.
 - `CheckoutWithBT`: Wraps the payment form with Basis Theory providers
 - `PaymentForm`: Handles card input and payment submission
 
 ### API Flow
-1. **Setup**: Fetches JWT and API key
-2. **Tokenization**: Uses Basis Theory to tokenize card data
-3. **Payment Method**: Creates payment method from token
-4. **Purchase Intent**: Initiates purchase through Crossmint
-5. **Verification**: Verifies and returns final payment intent
+
+#### Agentic Flow
+1. **Setup**: Fetches JWT and API key from Crossmint.
+2. **Tokenization**: Uses Basis Theory to tokenize card data.
+3. **Payment Method**: Creates a Basis Theory payment method from the token.
+4. **Purchase Intent**: Creates a purchase intent in Crossmint.
+5. **Verification**: Verifies the purchase intent.
+
+#### Basic Flow
+1. **Setup**: Fetches API key from Crossmint.
+2. **Tokenization**: Uses Basis Theory to tokenize card data.
+3. **Token Registration**: Registers the token with Crossmint.
 
 ## 📄 License
 
