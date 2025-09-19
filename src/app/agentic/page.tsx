@@ -6,6 +6,7 @@ import {
   CROSSMINT_BASE_URL,
   CROSSMINT_CLIENT_API_KEY,
   JWT_SUBJECT,
+  BASIS_THEORY_URL,
 } from "@/app/consts";
 import {
   useBtAi as useBasisTheoryAI,
@@ -142,7 +143,7 @@ function PaymentForm({
     };
 
     const response = await fetch(
-      `https://api.sandbox.basistheory.ai/projects/${basisTheoryProjectId}/payment-methods`,
+      `${BASIS_THEORY_URL}/projects/${basisTheoryProjectId}/payment-methods`,
       {
         method: "POST",
         headers: {
