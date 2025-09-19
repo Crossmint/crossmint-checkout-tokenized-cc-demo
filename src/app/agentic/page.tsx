@@ -8,10 +8,8 @@ import {
   JWT_SUBJECT,
 } from "@/app/consts";
 import {
-  // @ts-ignore
-  useBasisTheory as useBasisTheoryAI,
-  // @ts-ignore
-  BasisTheoryProvider as BasisTheoryAIProvider,
+  useBtAi as useBasisTheoryAI,
+  BtAiProvider as BasisTheoryAIProvider,
 } from "@basis-theory-ai/react";
 import {
   useBasisTheory,
@@ -78,7 +76,7 @@ export default function AgenticCheckoutPage() {
   }
 
   return (
-    <BasisTheoryAIProvider apiKey={jwt}>
+    <BasisTheoryAIProvider jwt={jwt}>
       <CheckoutWithBT
         jwt={jwt}
         apiKey={apiKey}

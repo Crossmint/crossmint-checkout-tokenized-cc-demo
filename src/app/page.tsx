@@ -3,10 +3,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CROSSMINT_BASE_URL, CROSSMINT_CLIENT_API_KEY } from "@/app/consts";
-import {
-  // @ts-expect-error -- No types available
-  BasisTheoryProvider as BasisTheoryAIProvider,
-} from "@basis-theory-ai/react";
+import { BtAiProvider as BasisTheoryAIProvider } from "@basis-theory-ai/react";
 import {
   useBasisTheory,
   BasisTheoryProvider,
@@ -70,7 +67,7 @@ export default function BasicCheckoutPage() {
   }
 
   return (
-    <BasisTheoryAIProvider apiKey={jwt}>
+    <BasisTheoryAIProvider jwt={jwt}>
       <CheckoutWithBT
         jwt={jwt}
         apiKey={apiKey}
