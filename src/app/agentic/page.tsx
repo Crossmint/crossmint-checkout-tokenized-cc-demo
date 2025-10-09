@@ -7,6 +7,7 @@ import {
   CROSSMINT_CLIENT_API_KEY,
   JWT_SUBJECT,
   BASIS_THEORY_URL,
+  BASIS_THEORY_ENVIRONMENT,
 } from "@/app/consts";
 import {
   useBtAi as useBasisTheoryAI,
@@ -56,6 +57,7 @@ export default function AgenticCheckoutPage() {
           {
             headers: {
               "x-api-key": CROSSMINT_CLIENT_API_KEY,
+              "ngrok-skip-browser-warning": "true",
             },
           }
         );
@@ -77,7 +79,7 @@ export default function AgenticCheckoutPage() {
   }
 
   return (
-    <BasisTheoryAIProvider jwt={jwt}>
+    <BasisTheoryAIProvider jwt={jwt} environment={BASIS_THEORY_ENVIRONMENT}>
       <CheckoutWithBT
         jwt={jwt}
         apiKey={apiKey}
@@ -98,7 +100,7 @@ function PaymentForm({
   const cardExpirationRef = useRef<ICardExpirationDateElement | null>(null);
   const cardCvcRef = useRef<ICardVerificationCodeElement | null>(null);
   const [cardholderName, setCardholderName] = useState("");
-  const { verifyPurchaseIntent } = useBasisTheoryAI();
+  const { verifyPurchaseIntent, environment, getStatus } = useBasisTheoryAI();
   const { bt } = useBasisTheory();
   const router = useRouter();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -176,6 +178,7 @@ function PaymentForm({
     const purchaseIntent = await response2.json();
 
     console.log("purchaseIntent", purchaseIntent);
+    console.log("getStatus", getStatus());
 
     const paymentIntent = await verifyPurchaseIntent(
       basisTheoryProjectId,

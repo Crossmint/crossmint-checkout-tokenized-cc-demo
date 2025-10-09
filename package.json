@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@basis-theory-ai/react": "^1.0.1-beta.8",
+    "@basis-theory-ai/react": "^1.0.1-beta.9",
     "@basis-theory/basis-theory-js": "^4.30.0",
     "@basis-theory/basis-theory-react": "^1.32.5",
     "@basis-theory/react-elements": "^1.23.1",

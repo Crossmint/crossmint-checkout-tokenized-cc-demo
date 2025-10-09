@@ -4,3 +4,4 @@ export const BASIS_THEORY_URL = "https://api.sandbox.basistheory.ai"; // "https:
 
 export const CROSSMINT_CLIENT_API_KEY = "";
 export const CROSSMINT_SERVER_API_KEY = "";
+export const BASIS_THEORY_ENVIRONMENT = "sandbox"; // "production";
