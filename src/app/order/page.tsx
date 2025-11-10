@@ -7,11 +7,9 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  CROSSMINT_BASE_URL,
-  CROSSMINT_CLIENT_API_KEY,
-  CROSSMINT_SERVER_API_KEY,
-} from "@/app/consts";
+const CROSSMINT_BASE_URL = process.env.NEXT_PUBLIC_CROSSMINT_BASE_URL!;
+const CROSSMINT_CLIENT_API_KEY = process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
+const CROSSMINT_SERVER_API_KEY = process.env.CROSSMINT_SERVER_API_KEY!;
 import { PaymentMethod } from "@/lib/types";
 
 export default function OrderPage() {

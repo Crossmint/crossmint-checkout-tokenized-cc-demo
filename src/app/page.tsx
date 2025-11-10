@@ -2,7 +2,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CROSSMINT_BASE_URL, CROSSMINT_CLIENT_API_KEY } from "@/app/consts";
+const CROSSMINT_BASE_URL = process.env.NEXT_PUBLIC_CROSSMINT_BASE_URL!;
+const CROSSMINT_CLIENT_API_KEY =
+  process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
 import { BtAiProvider as BasisTheoryAIProvider } from "@basis-theory-ai/react";
 import {
   useBasisTheory,
