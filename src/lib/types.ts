@@ -1,7 +1,7 @@
 export type PaymentMethod =
   | {
       type: "basic";
-      tokenId: string;
+      paymentMethodId: string;
     }
   | {
       type: "agentic";
