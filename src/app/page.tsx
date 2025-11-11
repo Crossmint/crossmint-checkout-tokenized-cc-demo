@@ -10,7 +10,8 @@ import {
 import type { CrossmintPaymentMethod } from "@crossmint/client-sdk-base";
 import type { PaymentMethod } from "@/lib/types";
 
-const CROSSMINT_CLIENT_API_KEY = process.env.CROSSMINT_CLIENT_API_KEY!;
+const CROSSMINT_CLIENT_API_KEY =
+  process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
 
 export default function BasicCheckoutPage() {
   return (
