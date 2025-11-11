@@ -7,12 +7,16 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  CROSSMINT_BASE_URL,
-  CROSSMINT_CLIENT_API_KEY,
-  CROSSMINT_SERVER_API_KEY,
-} from "@/app/consts";
+import { validateApiKeyAndGetCrossmintBaseUrl } from "@crossmint/common-sdk-base";
 import { PaymentMethod } from "@/lib/types";
+
+const CROSSMINT_CLIENT_API_KEY =
+  process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
+const CROSSMINT_SERVER_API_KEY = process.env.CROSSMINT_SERVER_API_KEY!;
+
+const CROSSMINT_BASE_URL = validateApiKeyAndGetCrossmintBaseUrl(
+  CROSSMINT_CLIENT_API_KEY
+);
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
@@ -109,7 +113,7 @@ export default function OrderPage() {
         }
 
         const paymentRes = await fetch(
-          `${CROSSMINT_BASE_URL}/api/unstable/orders/${orderId}/payment`,
+          `${CROSSMINT_BASE_URL}/api/unstable/2022-06-09/${orderId}/payment`,
           {
             method: "POST",
             headers: {
@@ -252,10 +256,10 @@ export default function OrderPage() {
 }
 
 function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): {
-  token: string;
+  paymentMethodId: string;
 } {
   if (paymentMethod.type === "basic") {
-    return { token: paymentMethod.tokenId };
+    return { paymentMethodId: paymentMethod.paymentMethodId };
   }
-  return { token: `vic:${paymentMethod.purchaseIntentId}` };
+  return { paymentMethodId: `vic:${paymentMethod.purchaseIntentId}` };
 }

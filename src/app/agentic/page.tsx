@@ -2,13 +2,13 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  CROSSMINT_BASE_URL,
-  CROSSMINT_CLIENT_API_KEY,
-  JWT_SUBJECT,
-  BASIS_THEORY_URL,
-  BASIS_THEORY_ENVIRONMENT,
-} from "@/app/consts";
+const CROSSMINT_BASE_URL = process.env.NEXT_PUBLIC_CROSSMINT_BASE_URL!;
+const CROSSMINT_CLIENT_API_KEY =
+  process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
+const JWT_SUBJECT = process.env.NEXT_PUBLIC_JWT_SUBJECT!;
+const BASIS_THEORY_URL = process.env.NEXT_PUBLIC_BASIS_THEORY_URL!;
+const BASIS_THEORY_ENVIRONMENT =
+  process.env.NEXT_PUBLIC_BASIS_THEORY_ENVIRONMENT!;
 import {
   useBtAi as useBasisTheoryAI,
   BtAiProvider as BasisTheoryAIProvider,
