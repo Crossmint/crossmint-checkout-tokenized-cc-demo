@@ -250,10 +250,10 @@ export default function OrderPage() {
 }
 
 function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): {
-  token: string;
+  paymentMethodId: string;
 } {
   if (paymentMethod.type === "basic") {
     return { paymentMethodId: paymentMethod.paymentMethodId };
   }
-  return { token: `vic:${paymentMethod.purchaseIntentId}` };
+  return { paymentMethodId: `vic:${paymentMethod.purchaseIntentId}` };
 }
