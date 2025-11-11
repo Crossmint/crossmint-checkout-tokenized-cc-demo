@@ -7,11 +7,16 @@ import {
   type FormEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-const CROSSMINT_BASE_URL = process.env.NEXT_PUBLIC_CROSSMINT_BASE_URL!;
+import { validateApiKeyAndGetCrossmintBaseUrl } from "@crossmint/common-sdk-base";
+import { PaymentMethod } from "@/lib/types";
+
 const CROSSMINT_CLIENT_API_KEY =
   process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY!;
 const CROSSMINT_SERVER_API_KEY = process.env.CROSSMINT_SERVER_API_KEY!;
-import { PaymentMethod } from "@/lib/types";
+
+const CROSSMINT_BASE_URL = validateApiKeyAndGetCrossmintBaseUrl(
+  CROSSMINT_CLIENT_API_KEY
+);
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
@@ -108,7 +113,7 @@ export default function OrderPage() {
         }
 
         const paymentRes = await fetch(
-          `${CROSSMINT_BASE_URL}/api/unstable/orders/${orderId}/payment`,
+          `${CROSSMINT_BASE_URL}/api/unstable/2022-06-09/${orderId}/payment`,
           {
             method: "POST",
             headers: {
