@@ -253,7 +253,7 @@ function getPaymentRequestBodyFromPaymentMethod(paymentMethod: PaymentMethod): {
   token: string;
 } {
   if (paymentMethod.type === "basic") {
-    return { token: paymentMethod.paymentMethodId };
+    return { paymentMethodId: paymentMethod.paymentMethodId };
   }
   return { token: `vic:${paymentMethod.purchaseIntentId}` };
 }
