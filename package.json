@@ -14,7 +14,7 @@
 		"@basis-theory/basis-theory-react": "^1.32.5",
 		"@basis-theory/react-elements": "^1.23.1",
 		"@basis-theory/web-elements": "^1.23.1",
-		"@crossmint/client-sdk-react-ui": "^2.6.3",
+		"@crossmint/common-sdk-base": "^0.9.8",
 		"@crossmint/client-sdk-base": "^1.7.3",
 		"next": "^13.5.0",
 		"react": "^18.2.0",
