@@ -12,22 +12,12 @@ import {
 import type {
   CrossmintPaymentMethod,
   OrderIntent,
+  VerificationConfig,
 } from "@crossmint/client-sdk-base";
 import type { PaymentMethod } from "@/lib/types";
-import { validateApiKeyAndGetCrossmintBaseUrl } from "@crossmint/common-sdk-base";
 
 const CROSSMINT_CLIENT_API_KEY =
   process.env.NEXT_PUBLIC_CROSSMINT_CLIENT_API_KEY || "";
-const CROSSMINT_BASE_URL = validateApiKeyAndGetCrossmintBaseUrl(
-  CROSSMINT_CLIENT_API_KEY
-);
-const BASIS_THEORY_PROJECT_ID =
-  process.env.NEXT_PUBLIC_BASIS_THEORY_PROJECT_ID || "";
-const BASIS_THEORY_ENVIRONMENT =
-  (process.env.NEXT_PUBLIC_BASIS_THEORY_ENVIRONMENT as
-    | "production"
-    | "sandbox") || "sandbox";
-const BT_JWT = process.env.NEXT_PUBLIC_BT_JWT || "";
 
 export default function AgenticCheckoutPage() {
   return (
@@ -44,56 +34,17 @@ function PaymentFormWrapper() {
   const router = useRouter();
   const [verificationState, setVerificationState] = useState<{
     orderIntent: OrderIntent;
-    paymentMethod: PaymentMethod;
+    config: VerificationConfig;
   } | null>(null);
 
-  const handlePaymentMethodSelected = async (
-    paymentMethod: CrossmintPaymentMethod
+  const handleOrderIntentCreated = async (
+    orderIntent: OrderIntent,
+    verificationConfig: VerificationConfig
   ) => {
-    console.log("Payment method selected:", paymentMethod.paymentMethodId);
-    console.log("Card details:", {
-      brand: paymentMethod.card.brand,
-      last4: paymentMethod.card.last4,
-      expiration: `${paymentMethod.card.expiration.month}/${paymentMethod.card.expiration.year}`,
-    });
+    console.log("Order intent created:", orderIntent);
+    console.log("Verification config:", verificationConfig);
 
     try {
-      // Create order intent
-      const response = await fetch(
-        `${CROSSMINT_BASE_URL}/api/unstable/order-intents`,
-        {
-          method: "POST",
-          headers: {
-            "X-API-KEY": CROSSMINT_CLIENT_API_KEY,
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            payment: {
-              paymentMethodId: paymentMethod.paymentMethodId,
-            },
-            mandates: [
-              {
-                type: "maxAmount",
-                value: "100.00",
-                details: {
-                  currency: "840",
-                  period: "weekly",
-                },
-              },
-            ],
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to create order intent: ${errorText}`);
-      }
-
-      const orderIntent = (await response.json()) as OrderIntent;
-      console.log("Order intent created:", orderIntent);
-
       const appPaymentMethod: PaymentMethod = {
         type: "agentic",
         purchaseIntentId: orderIntent.orderIntentId,
@@ -108,7 +59,7 @@ function PaymentFormWrapper() {
         // Set state to trigger verification component
         setVerificationState({
           orderIntent,
-          paymentMethod: appPaymentMethod,
+          config: verificationConfig,
         });
         return;
       }
@@ -128,9 +79,9 @@ function PaymentFormWrapper() {
         )}&orderIntentId=${encodeURIComponent(orderIntent.orderIntentId)}`
       );
     } catch (error) {
-      console.error("Error in payment method selection:", error);
+      console.error("Error processing order intent:", error);
       alert(
-        `Failed to process payment method: ${
+        `Failed to process order intent: ${
           error instanceof Error ? error.message : "Unknown error"
         }`
       );
@@ -142,18 +93,23 @@ function PaymentFormWrapper() {
 
     if (!verificationState) return;
 
-    const { orderIntent, paymentMethod } = verificationState;
+    const { orderIntent } = verificationState;
+
+    const appPaymentMethod: PaymentMethod = {
+      type: "agentic",
+      purchaseIntentId: orderIntent.orderIntentId,
+    };
 
     // Save payment method to session storage
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("paymentMethod", JSON.stringify(paymentMethod));
+      sessionStorage.setItem("paymentMethod", JSON.stringify(appPaymentMethod));
       sessionStorage.setItem("orderIntent", JSON.stringify(orderIntent));
     }
 
     // Navigate to order page
     router.push(
       `/order?paymentMethod=${encodeURIComponent(
-        JSON.stringify(paymentMethod)
+        JSON.stringify(appPaymentMethod)
       )}&orderIntentId=${encodeURIComponent(orderIntent.orderIntentId)}`
     );
   };
@@ -253,9 +209,7 @@ function PaymentFormWrapper() {
     <>
       {verificationState && (
         <OrderIntentVerification
-          basisTheoryProjectId={BASIS_THEORY_PROJECT_ID}
-          jwt={BT_JWT}
-          environment={BASIS_THEORY_ENVIRONMENT}
+          config={verificationState.config}
           orderIntent={verificationState.orderIntent}
           onVerificationComplete={handleVerificationComplete}
           onVerificationError={handleVerificationError}
@@ -305,7 +259,7 @@ function PaymentFormWrapper() {
           <div style={{ marginBottom: "20px" }}>
             <CrossmintPaymentMethodManagement
               jwt={jwt}
-              onPaymentMethodSelected={handlePaymentMethodSelected}
+              onOrderIntentCreated={handleOrderIntentCreated}
             />
           </div>
           <Link
