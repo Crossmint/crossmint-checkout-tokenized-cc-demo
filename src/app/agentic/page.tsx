@@ -133,7 +133,7 @@ function PaymentFormWrapper() {
       >
         <div
           style={{
-            width: "400px",
+            width: "500px",
             padding: "30px",
             border: "1px solid #e0e0e0",
             borderRadius: "12px",
@@ -226,7 +226,7 @@ function PaymentFormWrapper() {
       >
         <div
           style={{
-            width: "400px",
+            width: "500px",
             padding: "30px",
             border: "1px solid #e0e0e0",
             borderRadius: "12px",
