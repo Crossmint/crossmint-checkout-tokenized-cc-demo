@@ -73,7 +73,7 @@ function PaymentFormWrapper() {
       >
         <div
           style={{
-            width: "400px",
+            width: "500px",
             padding: "30px",
             border: "1px solid #e0e0e0",
             borderRadius: "12px",
@@ -130,16 +130,6 @@ function PaymentFormWrapper() {
           >
             Switch to Agentic Flow
           </Link>
-          <div
-            style={{
-              marginTop: "24px",
-              textAlign: "center",
-              fontSize: "14px",
-              color: "#666666",
-            }}
-          >
-            Powered by Crossmint
-          </div>
         </div>
       </div>
     );
@@ -157,7 +147,7 @@ function PaymentFormWrapper() {
     >
       <div
         style={{
-          width: "400px",
+          width: "500px",
           padding: "30px",
           border: "1px solid #e0e0e0",
           borderRadius: "12px",
@@ -191,37 +181,9 @@ function PaymentFormWrapper() {
             onPaymentMethodSelected={handlePaymentMethodSelected}
           />
         </div>
-        <Link
-          href="/agentic"
+        <div
           style={{
-            display: "block",
-            width: "100%",
-            padding: "12px",
-            backgroundColor: "#f0f0f0",
-            color: "#333",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
             marginBottom: "16px",
-            textAlign: "center",
-            textDecoration: "none",
-          }}
-        >
-          Switch to Agentic Flow
-        </Link>
-        <div
-          style={{
-            textAlign: "center",
-            fontSize: "14px",
-            color: "#666666",
-          }}
-        >
-          Powered by Crossmint
-        </div>
-        <div
-          style={{
-            marginTop: "20px",
             padding: "12px",
             backgroundColor: "#f9f9f9",
             borderRadius: "8px",
@@ -237,6 +199,24 @@ function PaymentFormWrapper() {
           <br />
           Expiry: Any future date
         </div>
+        <Link
+          href="/agentic"
+          style={{
+            display: "block",
+            width: "100%",
+            padding: "12px",
+            backgroundColor: "#f0f0f0",
+            color: "#333",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "16px",
+            textAlign: "center",
+            textDecoration: "none",
+          }}
+        >
+          Switch to Agentic Flow
+        </Link>
       </div>
     </div>
   );

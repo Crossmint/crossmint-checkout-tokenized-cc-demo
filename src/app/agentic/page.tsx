@@ -10,7 +10,6 @@ import {
   OrderIntentVerification,
 } from "@crossmint/client-sdk-react-ui";
 import type {
-  CrossmintPaymentMethod,
   OrderIntent,
   VerificationConfig,
 } from "@crossmint/client-sdk-base";
@@ -190,16 +189,6 @@ function PaymentFormWrapper() {
           >
             Switch to Basic Flow
           </Link>
-          <div
-            style={{
-              marginTop: "24px",
-              textAlign: "center",
-              fontSize: "14px",
-              color: "#666666",
-            }}
-          >
-            Powered by Crossmint
-          </div>
         </div>
       </div>
     );
@@ -262,37 +251,9 @@ function PaymentFormWrapper() {
               onOrderIntentCreated={handleOrderIntentCreated}
             />
           </div>
-          <Link
-            href="/"
+          <div
             style={{
-              display: "block",
-              width: "100%",
-              padding: "12px",
-              backgroundColor: "#f0f0f0",
-              color: "#333",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "16px",
               marginBottom: "16px",
-              textAlign: "center",
-              textDecoration: "none",
-            }}
-          >
-            Switch to Basic Flow
-          </Link>
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "14px",
-              color: "#666666",
-            }}
-          >
-            Powered by Crossmint
-          </div>
-          <div
-            style={{
-              marginTop: "20px",
               padding: "12px",
               backgroundColor: "#f9f9f9",
               borderRadius: "8px",
@@ -308,6 +269,24 @@ function PaymentFormWrapper() {
             <br />
             Expiry: Any future date
           </div>
+          <Link
+            href="/"
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "12px",
+              backgroundColor: "#f0f0f0",
+              color: "#333",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "16px",
+              textAlign: "center",
+              textDecoration: "none",
+            }}
+          >
+            Switch to Basic Flow
+          </Link>
         </div>
       </div>
     </>
