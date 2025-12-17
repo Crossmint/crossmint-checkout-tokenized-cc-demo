@@ -17,7 +17,7 @@
 		"@crossmint/client-sdk-react-ui": "^2.6.3",
 		"@crossmint/common-sdk-base": "^0.9.8",
 		"@crossmint/client-sdk-base": "^1.7.3",
-		"next": "^13.5.0",
+		"next": "14.2.35",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},
